@@ -1,0 +1,32 @@
+name: Clang Format Check
+
+on: [pull_request]
+
+jobs:
+  clang-format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize submodules
+      run: git submodule update --init --recursive
+
+    - name: Install clang-format
+      run: sudo apt-get install -y clang-format-18
+
+    - name: Check Style
+      id: clang-format
+      run: |
+        # Run clang-format check
+        clang-format-18 --dry-run --Werror -style='{BasedOnStyle: Google}' $(find ./ -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.cc" -o -name "*.hpp" \) -not -path "*/build/*" -not -path "*/third_party/*")
+        result=$?
+
+        # Check if there are any formatting issues
+        if [[ $result -ne 0 ]]; then
+          echo "ERROR: Code formatting does not match Google style"
+          exit 1
+        else
+          echo "INFO: Code formatting is correct and match with Google style"
+        fi

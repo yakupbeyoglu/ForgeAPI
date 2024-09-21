@@ -1,0 +1,46 @@
+name: Unit Tests
+on:
+  push:
+    branches-ignore:
+      - "hotfix/**"
+      - "feature/**"
+      - "feat/**"
+      - "support/**"
+  pull_request:
+
+jobs:
+  unit_tests:
+    name: ForgeAPI Unit tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Initialize submodules
+        run: git submodule update --init --recursive
+
+      - name: Update resources
+        run: |
+          sudo apt-get update -y
+
+      # This issue is located on the latest-ubuntu
+      - name: Fix Sanitizer issue
+        run: |
+          sudo sysctl -w vm.mmap_rnd_bits=28
+  
+      - name: Create executable
+        working-directory: .
+        run: |
+          sudo cmake  -Bbuild  -DCOMPILE_TESTS=ON -DENABLE_ADDRESS_SANITIZER=ON -DVERBOSE=ON
+          sudo make -j8 -C build
+
+      - name: Run ctest
+        working-directory: ./build
+        run: |
+          sudo ctest --verbose

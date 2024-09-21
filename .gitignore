@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+
+# Build
+build/
+Build/
+build-*/
+build_*
+
+# Bin
+bin/
+Bin/
+
+#Ignore kdev
+*.kdev4
+
+#Ignore Testing
+test/Testing/
