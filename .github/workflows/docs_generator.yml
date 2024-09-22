@@ -48,5 +48,5 @@ jobs:
 
 
       - name: Finish
-        run: |
-          Check [Docs](https://yakupbeyoglu.github.io/ForgeAPI/html/index.html)
+        run: echo "Docs deployed successfully. Check them out at https://yakupbeyoglu.github.io/ForgeAPI/html/index.html"
+
