@@ -1,0 +1,49 @@
+name: Docs Generator
+
+on:
+  push:
+    branches-ignore:
+      - "hotfix/**"
+      - "feature/**"
+      - "feat/**"
+      - "support/**"
+
+jobs:
+  build:
+    name: Build and Deploy Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Update resources
+        run: |
+          sudo apt-get update -y
+
+      - name: Install Doxygen requirements
+        run: |
+          sudo apt install -y doxygen graphviz
+          doxygen --version
+          dot -V
+
+      - name: Create executable
+        working-directory: .
+        run: |
+          sudo cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DDOCS=ON
+          sudo make -j12 -C build
+
+      - name: Run ctest
+        working-directory: ./build
+        run: |
+          sudo ctest --verbose
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./Docs
+        run: | 
+          Check [Docs](https://yakupbeyoglu.github.io/ForgeAPI/html/index.html)
