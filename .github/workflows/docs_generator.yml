@@ -45,5 +45,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./Docs
-        run: | 
+
+
+      - name: Finish
+        run: |
           Check [Docs](https://yakupbeyoglu.github.io/ForgeAPI/html/index.html)
