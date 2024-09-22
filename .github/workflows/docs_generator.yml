@@ -20,8 +20,7 @@ jobs:
           fetch-depth: 1
 
       - name: Update resources
-        run: |
-          sudo apt-get update -y
+        run: sudo apt-get update -y
 
       - name: Install Doxygen requirements
         run: |
@@ -32,21 +31,32 @@ jobs:
       - name: Create executable
         working-directory: .
         run: |
-          sudo cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DDOCS=ON
-          sudo make -j12 -C build
+          cmake -Bbuild -DGENERATE_DOCS=ON
+          make -j12 -C build
 
-      - name: Run ctest
-        working-directory: ./build
+      - name: List contents of build/bin
+        run: ls -la build/bin
+
+      - name: List contents of Docs directory
+        run: ls -la build/bin/Docs
+
+      - name: Prepare Deployment Directory
+        run: mkdir -p /home/runner/actions_github_pages_1726964869826
+
+      - name: Copy Documentation
         run: |
-          sudo ctest --verbose
+          if [ -d "build/bin/Docs" ]; then
+            cp -r build/bin/Docs/* /home/runner/actions_github_pages_1726964869826/
+          else
+            echo "Docs directory does not exist!"
+            exit 1
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./Docs
-
+          publish_dir: /home/runner/actions_github_pages_1726964869826
 
       - name: Finish
         run: echo "Docs deployed successfully. Check them out at https://yakupbeyoglu.github.io/ForgeAPI/html/index.html"
-
