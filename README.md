@@ -24,7 +24,7 @@ Developers who need to quickly spin up APIs for web and mobile applications, dat
 
 
 ## Requirements
-- C++ 17
+- C++ 20
 - CMAKE 3.27
 - [GTEST](https://github.com/google/googletest)
 - [santizers](https://github.com/google/sanitizers)
