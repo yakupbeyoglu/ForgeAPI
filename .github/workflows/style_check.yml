@@ -14,13 +14,13 @@ jobs:
       run: git submodule update --init --recursive
 
     - name: Install clang-format
-      run: sudo apt-get install -y clang-format-18
+      run: sudo apt-get install -y clang-format
 
     - name: Check Style
       id: clang-format
       run: |
         # Run clang-format check
-        clang-format-18 --dry-run --Werror -style='{BasedOnStyle: Google}' $(find ./ -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.cc" -o -name "*.hpp" \) -not -path "*/build/*" -not -path "*/third_party/*")
+        clang-format --dry-run --Werror -style='{BasedOnStyle: Google}' $(find ./ -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.cc" -o -name "*.hpp" \) -not -path "*/build/*" -not -path "*/third_party/*")
         result=$?
 
         # Check if there are any formatting issues
