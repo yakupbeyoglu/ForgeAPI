@@ -37,6 +37,12 @@ Build/
 build-*/
 build_*
 
+# Build related files
+CMakeFiles/
+*.cmake
+CMakeCache.txt
+Makefile
+
 # Bin
 bin/
 Bin/
